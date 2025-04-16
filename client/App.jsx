@@ -1,5 +1,6 @@
 import { useEffect ,useState} from "react";
 import axios from "axios";
+import "tailwindcss";
 
 const API_URL="http://localhost:5000/messages"
 function App(){
@@ -33,47 +34,51 @@ function App(){
       sendMessage();
     }
   }
-  if(! username){
-    return(
-      <div style={{ padding : 20}}>
-      <h2>Enter your name</h2>
-      <input 
-        value={tempUsername} onChange={(e)=>setTempUsername(e.target.value)}
-        onKeyDown={(e)=>{
-          if(e.key == "Enter") setUsername(tempUsername);
-        }}
-        />
-        <button onClick={()=> setUsername(tempUsername)}>Join Chat</button>
-        </div>
-    );
-  }
   return(
-    <div style={{ padding: 20}}>
-      <h2>Hello , {username}</h2>
-      <div 
-        style={{
-          border:"1px solid gray",
-          height:300,
-          overflowY:"scroll",
-          padding:10,
-          marginBottom:10,
-        }}
-        >
-          {chat.map((msg,i)=>(
-            <div key={i}>
-              <strong>{msg.user}:</strong>{msg.message}
+    <div className="min-h-screen bg-gradient-to-r from-violet-500 to-fuchsia-400 flex items-center justify-center">
+    {!username ? (
+      <div className="p-8 bg-white rounded-lg shadow-md max-w-md w-full">
+        <h2 className="text-2xl font-bold mb-4 text-center">Enter your Name to Join Chat</h2>
+        <div className="flex flex-col sm:flex-row items-center">
+          <input 
+            className="border border-gray-300 rounded px-4 py-2 w-full sm:w-auto mb-3 sm:mb-0 sm:mr-2"
+            value={tempUsername} 
+            onChange={(e)=>setTempUsername(e.target.value)}
+            onKeyDown={(e)=>{
+              if(e.key == "Enter") setUsername(tempUsername);
+            }}
+          />
+          <button 
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full sm:w-auto"
+            onClick={()=> setUsername(tempUsername)}>
+            Join Chat
+          </button>
         </div>
-        ))}
+      </div>
+    ):(
+      <div className="p-5 bg-white rounded-lg shadow-md max-w-2xl w-full">
+        <h2 className="text-xl font-bold mb-3">Hello, {username}</h2>
+        <div className="border border-gray-300 h-[300px] overflow-y-scroll p-2.5 mb-2.5">
+          {chat.map((msg,i)=>(
+            <div key={i} className="mb-1">
+              <strong className="font-semibold">{msg.user}:</strong>{msg.message}
+            </div>
+          ))}
+        </div>
+        <div className="flex">
+          <input
+            className="border border-gray-300 rounded px-2 py-1 flex-grow mr-2"
+            value={message}
+            onChange={(e)=> setMessage(e.target.value)}
+            onKeyDown={handleEnter}
+            placeholder="Type your message..." 
+          />
+          <button className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600" onClick={sendMessage}>Send</button>
+        </div>
+      </div>
+    )}
     </div>
-    <input
-       value={message}
-       onChange={(e)=> setMessage(e.target.value)}
-       onKeyDown={handleEnter}
-       placeholder="Type your message..." 
-    />
-    <button onClick={sendMessage}>Send</button>
-    </div>
-  )
-}
+  );
+  }
 
 export default App;
